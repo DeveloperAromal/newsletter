@@ -4,14 +4,13 @@ export async function POST(req: Request) {
 
     const incomingUrl = postData.url || "";
 
-    // Simple check if URL is YouTube (can be enhanced if needed)
     const isYouTube = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i.test(
       incomingUrl
     );
 
     const apiUrl = isYouTube
-      ? "http://localhost:8080/api/v1/scrape/youtube"
-      : "http://localhost:8080/api/v1/scrape/web";
+      ? "https://flask-transcript.onrender.com/transcript"
+      : "https://newsletter-backend-kfg7.onrender.com/api/v1/scrape/web";
 
     const response = await fetch(apiUrl, {
       method: "POST",

@@ -2,7 +2,8 @@ export async function POST(req: Request) {
   try {
     const postData = await req.json(); // Parse the incoming JSON
 
-    const url = "http://localhost:8080/api/v1/create/newsletter";
+    const url =
+      "https://newsletter-backend-kfg7.onrender.com/api/v1/create/newsletter";
 
     const response = await fetch(url, {
       method: "POST",
@@ -19,7 +20,7 @@ export async function POST(req: Request) {
       });
     }
 
-    const data = await response.json(); // Corrected: should call .json()
+    const data = await response.json();
 
     return new Response(JSON.stringify(data), {
       status: 200,
