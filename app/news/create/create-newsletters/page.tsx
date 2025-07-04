@@ -2,7 +2,8 @@
 
 import Navbar from "@/app/components/includes/Navbar";
 import { Sparkles } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface NewsletterData {
   title: string;
@@ -13,18 +14,40 @@ interface NewsletterData {
 }
 
 export default function Hero() {
+  const router = useRouter();
+  const verificationUrl = process.env.NEXT_PUBLIC_SUPABASE_VALIDATION_URL;
   const [formData, setFormData] = useState({
     link: "",
   });
-
-  const isYouTube = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\//i.test(
-    formData.link
-  );
 
   const [newsletterData, setNewsLetterData] = useState<NewsletterData | null>(
     null
   );
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem("access_token");
+
+    if (!token) {
+      router.push("/");
+      return;
+    }
+    const validateToken = async () => {
+      const res = await fetch(`${verificationUrl}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!res.ok) {
+        localStorage.removeItem("access_token");
+        router.push("/");
+      }
+    };
+
+    validateToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -40,7 +63,7 @@ export default function Hero() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...(isYouTube ? { videoUrl: formData.link } : { url: formData.link }),
+          url: formData.link,
         }),
       });
       if (!scrapeRes.ok) throw new Error("Scrape API error");
@@ -70,7 +93,7 @@ export default function Hero() {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-white to-green-50 text-gray-900 px-6 sm:px-10 font-sans">
+    <section className="h-full bg-gradient-to-br from-white to-green-50 text-gray-900 px-6 sm:px-10 font-sans">
       <Navbar />
       <div className="flex items-center justify-center h-screen pt-16 pb-10">
         <div className="w-full max-w-5xl">
