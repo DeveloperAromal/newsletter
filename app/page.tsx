@@ -4,12 +4,14 @@ import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { toast, ToastContainer } from "react-toastify";
+import { Eye, EyeOff } from "lucide-react";
 
 export default function Home() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -81,20 +83,27 @@ export default function Home() {
                 required
               />
             </div>
-            <div>
+            <div className="relative">
               <label htmlFor="password" className="sr-only">
                 Password
               </label>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"}
                 id="password"
                 name="password"
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter your password"
-                className="w-full rounded-md border border-gray-300 py-2.5 px-3 text-base placeholder-gray-500 shadow-sm transition-all duration-300 focus:border-lime-500 focus:ring-1 focus:ring-lime-500 focus:outline-none"
+                className="w-full rounded-md border border-gray-300 py-2.5 px-3 pr-10 text-base placeholder-gray-500 shadow-sm transition-all duration-300 focus:border-lime-500 focus:ring-1 focus:ring-lime-500 focus:outline-none"
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
             </div>
 
             <button

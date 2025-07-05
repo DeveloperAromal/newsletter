@@ -4,12 +4,16 @@ import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
+
+import { Eye, EyeOff } from "lucide-react";
+
 export default function AdminPanel() {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
     name: "",
   });
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,9 +39,33 @@ export default function AdminPanel() {
     if (res.ok) {
       console.log("✅ User created successfully:", result);
       toast.success("User created successfully");
+
+      // 🔔 Send welcome email
+      const mailRes = await fetch("/api/mail", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          to: formData.email,
+          email: formData.email,
+          password: formData.password,
+        }),
+      });
+
+      const mailResult = await mailRes.json();
+      if (mailRes.ok) {
+        toast.success("✉️ Welcome email sent");
+      } else {
+        console.error("❌ Failed to send email:", mailResult);
+        toast.error("Failed to send welcome email");
+      }
+
+      // Optionally clear form
+      setFormData({ name: "", email: "", password: "" });
     } else {
       console.error("❌ Error creating user:", result);
-      alert(result.message || "Something went wrong!");
+      toast.error(result.message || "Something went wrong!");
     }
   };
 
@@ -73,7 +101,7 @@ export default function AdminPanel() {
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="John Doe"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    className="mt-1 block w-full px-4 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   />
                 </div>
                 <div>
@@ -90,26 +118,32 @@ export default function AdminPanel() {
                     value={formData.email}
                     onChange={handleChange}
                     placeholder="john.doe@example.com"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    className="mt-1 block w-full px-4 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
                   />
                 </div>
-                <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
+                <div className="relative">
+                  <label htmlFor="password" className="sr-only">
                     Password
                   </label>
                   <input
-                    type="password"
+                    type={showPassword ? "text" : "password"}
                     id="password"
                     name="password"
                     value={formData.password}
                     onChange={handleChange}
-                    placeholder="********"
-                    className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    placeholder="Enter your password"
+                    className="mt-1 block w-full px-4 py-2 border text-black border-gray-300 rounded-md shadow-sm focus:ring-green-500 focus:border-green-500 sm:text-sm"
+                    required
                   />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
                 </div>
+
                 <div>
                   <button
                     type="submit"
