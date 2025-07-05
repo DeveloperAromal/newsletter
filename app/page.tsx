@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function Home() {
   const [formData, setFormData] = useState({
@@ -31,6 +32,8 @@ export default function Home() {
     const result = await res.json();
 
     if (res.ok && result.session?.access_token) {
+      toast.success("Login sucessfull");
+      toast.success("Redirecting....");
       localStorage.setItem("access_token", result.session.access_token);
 
       if (result.role === "admin") {
@@ -39,12 +42,13 @@ export default function Home() {
         router.push("/news/create/create-newsletters");
       }
     } else {
-      alert(result.message || "Login failed");
+      toast.success("Login Failed");
     }
   };
 
   return (
     <main className="flex min-h-screen">
+      <ToastContainer />
       <div className="flex w-full items-center justify-center bg-neutral-900 p-4 lg:w-1/2">
         <div className="flex w-full max-w-sm flex-col items-center rounded-xl p-6 transition-all duration-300">
           <div className="mb-6 transform transition-transform duration-300 hover:scale-105">

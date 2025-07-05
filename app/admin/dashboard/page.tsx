@@ -3,7 +3,7 @@
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-
+import { ToastContainer, toast } from "react-toastify";
 export default function AdminPanel() {
   const [formData, setFormData] = useState({
     email: "",
@@ -34,7 +34,7 @@ export default function AdminPanel() {
 
     if (res.ok) {
       console.log("✅ User created successfully:", result);
-      localStorage.setItem("access_token", result.accessToken);
+      toast.success("User created successfully");
     } else {
       console.error("❌ Error creating user:", result);
       alert(result.message || "Something went wrong!");
@@ -43,6 +43,7 @@ export default function AdminPanel() {
 
   return (
     <section>
+      <ToastContainer />
       <div>
         <div className="flex justify-end">
           <Link href="/news/create/create-newsletters">
