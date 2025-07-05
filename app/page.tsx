@@ -108,14 +108,17 @@ export default function Home() {
         </div>
       </div>
 
-      <div
-        className="hidden lg:flex lg:w-2/2 items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: "url('/your-background-image.jpg')" }}
-      >
-        <div className="flex h-full w-full items-center justify-center bg-black bg-opacity-30 p-4 text-white">
-          <h2 className="text-center text-4xl font-bold">
-            Your Catchy Slogan Here
-          </h2>
+      <div className="hidden lg:flex lg:w-2/2 items-center justify-center bg-cover bg-center background">
+        <div className="flex h-full w-full items-center justify-center p-4 text-white">
+          <div>
+            <h2 className="text-center text-5xl font-bold">
+              Where Future Meets Excellence
+            </h2>
+            <p className="text-center text-lg text-neutral-200 mt-4 max-w-2xl mx-auto">
+              Empowering the next generation with knowledge, values, and
+              innovation — guiding every student toward a brighter tomorrow.
+            </p>
+          </div>
         </div>
       </div>
     </main>
