@@ -39,10 +39,7 @@ export default function Hero() {
         },
       });
 
-      if (!res.ok) {
-        localStorage.removeItem("access_token");
-        router.push("/");
-      }
+      return res;
     };
 
     validateToken();

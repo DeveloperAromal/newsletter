@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     );
 
     const apiUrl = isYouTube
-      ? "https://flask-transcript.onrender.com/transcript"
+      ? "https://yt-transcript-osle.onrender.com/transcript"
       : "https://newsletter-backend-kfg7.onrender.com/api/v1/scrape/web";
 
     const response = await fetch(apiUrl, {
